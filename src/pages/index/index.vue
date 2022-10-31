@@ -67,7 +67,7 @@ const go = (index: number, itemIndex: number) => {
   }
 
   const urls = ['/pages/background-music', '/pages/monitoring-center', '/pages/entrance-guard'];
-  uni.navigateTo({ url: urls[index] });
+  uni.navigateTo({ url: urls[itemIndex] });
 };
 </script>
 
