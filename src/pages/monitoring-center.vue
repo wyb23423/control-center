@@ -23,7 +23,7 @@
 import { ref } from 'vue';
 import MenuList from '../components/MenuList.vue';
 
-const menus = ref(['1F', '2F', '3F', '4F', '5F', '6F', '7F', '8F', '9F']);
+const menus = ref(['1F', '2F', '3F', '4F']);
 
 const videoList = ref([
   { name: '监控1', id: 1 },

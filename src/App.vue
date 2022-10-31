@@ -22,6 +22,7 @@ onHide(() => {
 
   display: flex;
   align-items: center;
+  overflow-y: hidden;
 
   background-size: cover;
   background-repeat: no-repeat;
