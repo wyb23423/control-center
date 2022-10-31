@@ -2,45 +2,66 @@
   <swiper
     class="page-container"
     :current="current"
+    circular
     display-multiple-items="3"
     @change="current = $event.detail.current"
   >
-    <swiper-item></swiper-item>
-    <swiper-item>
-      <view class="module-item" :style="style(0)">
-        <view class="module-item__inner" style="background-image: url(/static/bg/Place/2022.1.22.png)" @click="go(0)">
-          背景音乐
+    <swiper-item v-for="(item, index) of currentList" :key="`item-${index}`">
+      <view class="module-item" :style="style(index)">
+        <view class="module-item__inner" :style="`background-image: url(${item.bg})`" @click="go(index, item.index)">
+          {{ item.name }}
         </view>
       </view>
     </swiper-item>
-    <swiper-item>
-      <view class="module-item" :style="style(1)">
-        <view class="module-item__inner" style="background-image: url(/static/bg/Place/2022.1.21.png)" @click="go(1)">
-          监控中心
-        </view>
-      </view>
-    </swiper-item>
-    <swiper-item>
-      <view class="module-item" :style="style(2)">
-        <view class="module-item__inner" style="background-image: url(/static/bg/Place/2022.3.31.png)" @click="go(2)">
-          智能门禁
-        </view>
-      </view>
-    </swiper-item>
-    <swiper-item item-id="3"></swiper-item>
   </swiper>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-const current = ref(1);
+interface MenuItem {
+  name: string;
+  index: number;
+  bg: string;
+}
+
+const current = ref(0);
+const list = [
+  { name: '背景音乐', bg: '/static/bg/Place/2022.1.22.png' },
+  { name: '监控中心', bg: '/static/bg/Place/2022.1.21.png' },
+  { name: '智能门禁', bg: '/static/bg/Place/2022.3.31.png' },
+];
+const DISPLAY_MULTIPLE_ITEMS = 3;
+const currentList = computed(() => {
+  const arr: MenuItem[] = [];
+  while (arr.length <= DISPLAY_MULTIPLE_ITEMS) {
+    arr.push(...list.map((value, index) => ({ ...value, index })));
+  }
+
+  return arr;
+});
 
 const style = (index: number) => {
-  return { transform: `scale(${1 - 0.2 * Math.abs(index - current.value)})` };
+  const itemLength = currentList.value.length;
+
+  let center = current.value + Math.floor(DISPLAY_MULTIPLE_ITEMS / 2);
+  if (center > itemLength - 1) {
+    center -= itemLength;
+  }
+
+  let x = Math.abs(index - center);
+  if (x > itemLength / 2) {
+    x = itemLength - x;
+  }
+
+  return { transform: `scale(${1 - 0.2 * x})` };
 };
 
-const go = (index: number) => {
+const go = (index: number, itemIndex: number) => {
+  index -= Math.floor(DISPLAY_MULTIPLE_ITEMS / 2);
+  if (index < 0) {
+    index += currentList.value.length;
+  }
   if (index !== current.value) {
     return (current.value = index);
   }
